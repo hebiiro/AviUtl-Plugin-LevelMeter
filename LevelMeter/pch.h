@@ -8,6 +8,7 @@
 #pragma comment(lib, "shlwapi.lib")
 #include <commdlg.h>
 #pragma comment(lib, "comdlg32.lib")
+#include <vsstyle.h>
 #include <uxtheme.h>
 #pragma comment(lib, "uxtheme.lib")
 #include <mmsystem.h>

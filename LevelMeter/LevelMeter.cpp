@@ -13,6 +13,7 @@ void ___outputLog(LPCTSTR text, LPCTSTR output)
 //--------------------------------------------------------------------
 
 AviUtl::FilterPlugin* g_fp = 0;
+HTHEME g_theme = 0;
 
 double g_level[2] = {};
 double g_peak[2] = {};
@@ -32,6 +33,7 @@ COLORREF g_guageTextColor = RGB(220, 220, 220);
 COLORREF g_separatorColor = RGB(0, 0, 0);
 int g_minRange = -33;
 int g_maxRange = 14;
+BOOL g_useTheme = FALSE;
 
 //--------------------------------------------------------------------
 
@@ -122,6 +124,12 @@ void onPaint(HWND hwnd, AviUtl::EditHandle* editp, AviUtl::FilterPlugin* fp)
 	int w = rc.right - rc.left;
 	int h = rc.bottom - rc.top;
 
+	if (g_useTheme)
+	{
+		// テーマ API を使用して背景を描画する。
+		::DrawThemeBackground(g_theme, dc, WP_DIALOG, ETS_NORMAL, &rc, 0);
+	}
+	else
 	{
 		// 背景を描画する。
 
@@ -204,11 +212,21 @@ void onPaint(HWND hwnd, AviUtl::EditHandle* editp, AviUtl::FilterPlugin* fp)
 			::MoveToEx(dc, rc.right, rcText.bottom, 0);
 			::LineTo(dc, rc.left + ::MulDiv(w, 3, 4), rcText.bottom);
 
-			TCHAR text[MAX_PATH] = {};
-			::StringCbPrintf(text, sizeof(text), _T("%+d"), i);
+			WCHAR text[MAX_PATH] = {};
+			::StringCbPrintfW(text, sizeof(text), L"%+d", i);
 
-			::DrawText(dc, text, ::lstrlen(text), &rcText, DT_LEFT | DT_NOCLIP);
-			::DrawText(dc, text, ::lstrlen(text), &rcText, DT_RIGHT | DT_NOCLIP);
+			if (g_useTheme)
+			{
+				::DrawThemeText(g_theme, dc, WP_DIALOG, ETS_NORMAL,
+					text, ::lstrlenW(text), DT_LEFT | DT_NOCLIP, 0, &rcText);
+				::DrawThemeText(g_theme, dc, WP_DIALOG, ETS_NORMAL,
+					text, ::lstrlenW(text), DT_RIGHT | DT_NOCLIP, 0, &rcText);
+			}
+			else
+			{
+				::DrawTextW(dc, text, ::lstrlenW(text), &rcText, DT_LEFT | DT_NOCLIP);
+				::DrawTextW(dc, text, ::lstrlenW(text), &rcText, DT_RIGHT | DT_NOCLIP);
+			}
 		}
 	}
 
@@ -268,6 +286,8 @@ void onConfigDialog(HWND hwnd)
 	::SetDlgItemInt(dialog, IDC_SEPARATOR_COLOR, g_separatorColor, FALSE);
 	::SetDlgItemInt(dialog, IDC_MIN_RANGE, g_minRange, TRUE);
 	::SetDlgItemInt(dialog, IDC_MAX_RANGE, g_maxRange, TRUE);
+	HWND hwndUseTheme = ::GetDlgItem(dialog, IDC_USE_THEME);
+	Button_SetCheck(hwndUseTheme, g_useTheme);
 
 	int retValue = dialog.doModal();
 
@@ -285,6 +305,7 @@ void onConfigDialog(HWND hwnd)
 	g_separatorColor = ::GetDlgItemInt(dialog, IDC_SEPARATOR_COLOR, 0, FALSE);
 	g_minRange = ::GetDlgItemInt(dialog, IDC_MIN_RANGE, 0, TRUE);
 	g_maxRange = ::GetDlgItemInt(dialog, IDC_MAX_RANGE, 0, TRUE);
+	g_useTheme = Button_GetCheck(hwndUseTheme);
 
 	::InvalidateRect(hwnd, 0, FALSE);
 }
@@ -308,6 +329,7 @@ void loadConfig()
 	getPrivateProfileColor(fileName, L"Config", L"separatorColor", g_separatorColor);
 	getPrivateProfileInt(fileName, L"Config", L"minRange", g_minRange);
 	getPrivateProfileInt(fileName, L"Config", L"maxRange", g_maxRange);
+	getPrivateProfileBool(fileName, L"Config", L"useTheme", g_useTheme);
 }
 
 void saveConfig()
@@ -327,6 +349,7 @@ void saveConfig()
 	setPrivateProfileColor(fileName, L"Config", L"separatorColor", g_separatorColor);
 	setPrivateProfileInt(fileName, L"Config", L"minRange", g_minRange);
 	setPrivateProfileInt(fileName, L"Config", L"maxRange", g_maxRange);
+	setPrivateProfileBool(fileName, L"Config", L"useTheme", g_useTheme);
 }
 
 //--------------------------------------------------------------------

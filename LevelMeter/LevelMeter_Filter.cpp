@@ -63,11 +63,16 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 		{
 			MY_TRACE(_T("func_WndProc(Init, 0x%08X, 0x%08X)\n"), wParam, lParam);
 
+			g_theme = ::OpenThemeData(hwnd, VSCLASS_WINDOW);
+			MY_TRACE_HEX(g_theme);
+
 			break;
 		}
 	case AviUtl::detail::FilterPluginWindowMessage::Exit:
 		{
 			MY_TRACE(_T("func_WndProc(Exit, 0x%08X, 0x%08X)\n"), wParam, lParam);
+
+			::CloseThemeData(g_theme), g_theme = 0;
 
 			break;
 		}

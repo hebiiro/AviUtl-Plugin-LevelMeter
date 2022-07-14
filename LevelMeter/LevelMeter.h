@@ -25,6 +25,7 @@ struct AudioData
 //--------------------------------------------------------------------
 
 extern AviUtl::FilterPlugin* g_fp;
+extern HTHEME g_theme;
 
 extern double g_level[2];
 extern double g_peak[2];
@@ -40,6 +41,7 @@ extern COLORREF g_guageTextColor;
 extern COLORREF g_separatorColor;
 extern int g_minRange;
 extern int g_maxRange;
+extern BOOL g_useTheme;
 
 extern int g_dragMode;
 extern POINT g_dragOriginPoint;

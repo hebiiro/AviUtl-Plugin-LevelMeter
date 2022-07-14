@@ -14,6 +14,7 @@
 #define IDC_MIN_RANGE                   1010
 #define IDC_MAX_RANGE                   1011
 #define IDC_SEPARATOR_COLOR             1012
+#define IDC_USE_THEME                   1013
 
 // Next default values for new objects
 // 
@@ -21,7 +22,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
