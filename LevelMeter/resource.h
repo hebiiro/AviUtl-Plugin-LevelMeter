@@ -15,6 +15,9 @@
 #define IDC_MAX_RANGE                   1011
 #define IDC_SEPARATOR_COLOR             1012
 #define IDC_USE_THEME                   1013
+#define IDC_ZEBRA_COLOR                 1014
+#define IDC_ZEBRA_WIDTH                 1015
+#define IDC_ZEBRA_STEP                  1016
 
 // Next default values for new objects
 // 

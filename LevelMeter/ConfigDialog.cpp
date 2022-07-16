@@ -36,6 +36,7 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			case IDC_GUAGE_COLOR:
 			case IDC_GUAGE_TEXT_COLOR:
 			case IDC_SEPARATOR_COLOR:
+			case IDC_ZEBRA_COLOR:
 				{
 					HWND control = (HWND)lParam;
 
@@ -73,6 +74,7 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			case IDC_GUAGE_COLOR:
 			case IDC_GUAGE_TEXT_COLOR:
 			case IDC_SEPARATOR_COLOR:
+			case IDC_ZEBRA_COLOR:
 				{
 					DRAWITEMSTRUCT* dis = (DRAWITEMSTRUCT*)lParam;
 

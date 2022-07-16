@@ -157,7 +157,7 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 EXTERN_C AviUtl::FilterPluginDLL* CALLBACK GetFilterTable()
 {
 	LPCSTR name = "レベルメーター";
-	LPCSTR information = "レベルメーター 1.0.0 by 蛇色";
+	LPCSTR information = "レベルメーター 1.2.0 by 蛇色";
 
 	static AviUtl::FilterPluginDLL filter =
 	{

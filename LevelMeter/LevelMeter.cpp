@@ -31,6 +31,9 @@ COLORREF g_guageColor = RGB(220, 220, 220);
 int g_guageWidth = 1;
 COLORREF g_guageTextColor = RGB(220, 220, 220);
 COLORREF g_separatorColor = RGB(0, 0, 0);
+int g_zebraStep = 3;
+int g_zebraWidth = 1;
+COLORREF g_zebraColor = RGB(0, 0, 0);
 int g_minRange = -33;
 int g_maxRange = 14;
 BOOL g_useTheme = FALSE;
@@ -166,13 +169,27 @@ void onPaint(HWND hwnd, AviUtl::EditHandle* editp, AviUtl::FilterPlugin* fp)
 			{
 				double peak = (g_peak[i] - g_minRange) / (g_maxRange - g_minRange);
 
-				GdiObj<HPEN> pen = ::CreatePen(PS_SOLID, g_peakWidth, g_peakColor);
-				GdiObjSelector penSelector(dc, pen);
-
 				int peakY = bottom - (int)(h * peak);
 
-				::MoveToEx(dc, rects[i].left, peakY, 0);
-				::LineTo(dc, rects[i].right, peakY);
+				{
+					GdiObj<HPEN> pen = ::CreatePen(PS_SOLID, g_peakWidth, g_peakColor);
+					GdiObjSelector penSelector(dc, pen);
+
+					::MoveToEx(dc, rects[i].left, peakY, 0);
+					::LineTo(dc, rects[i].right, peakY);
+				}
+
+				if (g_zebraStep > 0)
+				{
+					GdiObj<HPEN> pen = ::CreatePen(PS_SOLID, g_zebraWidth, g_zebraColor);
+					GdiObjSelector penSelector(dc, pen);
+
+					for (int y = 0; y < (bottom - peakY) - g_zebraStep / 2; y += g_zebraStep)
+					{
+						::MoveToEx(dc, rects[i].left, bottom - y, 0);
+						::LineTo(dc, rects[i].right, bottom - y);
+					}
+				}
 			}
 		}
 	}
@@ -284,6 +301,9 @@ void onConfigDialog(HWND hwnd)
 	::SetDlgItemInt(dialog, IDC_GUAGE_WIDTH, g_guageWidth, FALSE);
 	::SetDlgItemInt(dialog, IDC_GUAGE_TEXT_COLOR, g_guageTextColor, FALSE);
 	::SetDlgItemInt(dialog, IDC_SEPARATOR_COLOR, g_separatorColor, FALSE);
+	::SetDlgItemInt(dialog, IDC_ZEBRA_COLOR, g_zebraColor, FALSE);
+	::SetDlgItemInt(dialog, IDC_ZEBRA_WIDTH, g_zebraWidth, FALSE);
+	::SetDlgItemInt(dialog, IDC_ZEBRA_STEP, g_zebraStep, FALSE);
 	::SetDlgItemInt(dialog, IDC_MIN_RANGE, g_minRange, TRUE);
 	::SetDlgItemInt(dialog, IDC_MAX_RANGE, g_maxRange, TRUE);
 	HWND hwndUseTheme = ::GetDlgItem(dialog, IDC_USE_THEME);
@@ -303,6 +323,9 @@ void onConfigDialog(HWND hwnd)
 	g_guageWidth = ::GetDlgItemInt(dialog, IDC_GUAGE_WIDTH, 0, FALSE);
 	g_guageTextColor = ::GetDlgItemInt(dialog, IDC_GUAGE_TEXT_COLOR, 0, FALSE);
 	g_separatorColor = ::GetDlgItemInt(dialog, IDC_SEPARATOR_COLOR, 0, FALSE);
+	g_zebraColor = ::GetDlgItemInt(dialog, IDC_ZEBRA_COLOR, 0, FALSE);
+	g_zebraWidth = ::GetDlgItemInt(dialog, IDC_ZEBRA_WIDTH, 0, FALSE);
+	g_zebraStep = ::GetDlgItemInt(dialog, IDC_ZEBRA_STEP, 0, FALSE);
 	g_minRange = ::GetDlgItemInt(dialog, IDC_MIN_RANGE, 0, TRUE);
 	g_maxRange = ::GetDlgItemInt(dialog, IDC_MAX_RANGE, 0, TRUE);
 	g_useTheme = Button_GetCheck(hwndUseTheme);
@@ -327,6 +350,9 @@ void loadConfig()
 	getPrivateProfileInt(fileName, L"Config", L"guageWidth", g_guageWidth);
 	getPrivateProfileColor(fileName, L"Config", L"guageTextColor", g_guageTextColor);
 	getPrivateProfileColor(fileName, L"Config", L"separatorColor", g_separatorColor);
+	getPrivateProfileColor(fileName, L"Config", L"zebraColor", g_zebraColor);
+	getPrivateProfileInt(fileName, L"Config", L"zebraWidth", g_zebraWidth);
+	getPrivateProfileInt(fileName, L"Config", L"zebraStep", g_zebraStep);
 	getPrivateProfileInt(fileName, L"Config", L"minRange", g_minRange);
 	getPrivateProfileInt(fileName, L"Config", L"maxRange", g_maxRange);
 	getPrivateProfileBool(fileName, L"Config", L"useTheme", g_useTheme);
@@ -347,6 +373,9 @@ void saveConfig()
 	setPrivateProfileInt(fileName, L"Config", L"guageWidth", g_guageWidth);
 	setPrivateProfileColor(fileName, L"Config", L"guageTextColor", g_guageTextColor);
 	setPrivateProfileColor(fileName, L"Config", L"separatorColor", g_separatorColor);
+	setPrivateProfileColor(fileName, L"Config", L"zebraColor", g_zebraColor);
+	setPrivateProfileInt(fileName, L"Config", L"zebraWidth", g_zebraWidth);
+	setPrivateProfileInt(fileName, L"Config", L"zebraStep", g_zebraStep);
 	setPrivateProfileInt(fileName, L"Config", L"minRange", g_minRange);
 	setPrivateProfileInt(fileName, L"Config", L"maxRange", g_maxRange);
 	setPrivateProfileBool(fileName, L"Config", L"useTheme", g_useTheme);
