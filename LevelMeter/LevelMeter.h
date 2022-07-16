@@ -2,6 +2,11 @@
 
 //--------------------------------------------------------------------
 
+struct TimerID
+{
+	static const UINT REDRAW = 2022;
+};
+
 struct CommandID
 {
 	static const UINT CONFIG = 2022;
@@ -45,6 +50,7 @@ extern COLORREF g_zebraColor;
 extern int g_minRange;
 extern int g_maxRange;
 extern BOOL g_useTheme;
+extern BOOL g_immediate;
 
 extern int g_dragMode;
 extern POINT g_dragOriginPoint;

@@ -82,6 +82,17 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 
 			break;
 		}
+	case WM_TIMER:
+		{
+			if (wParam == TimerID::REDRAW)
+			{
+				::KillTimer(hwnd, wParam);
+
+				onPaint(hwnd, editp, fp);
+			}
+
+			break;
+		}
 	case WM_PAINT:
 		{
 			MY_TRACE(_T("func_WndProc(WM_PAINT, 0x%08X, 0x%08X)\n"), wParam, lParam);
@@ -157,7 +168,7 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 EXTERN_C AviUtl::FilterPluginDLL* CALLBACK GetFilterTable()
 {
 	LPCSTR name = "レベルメーター";
-	LPCSTR information = "レベルメーター 1.2.0 by 蛇色";
+	LPCSTR information = "レベルメーター 1.3.0 by 蛇色";
 
 	static AviUtl::FilterPluginDLL filter =
 	{

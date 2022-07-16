@@ -18,6 +18,7 @@
 #define IDC_ZEBRA_COLOR                 1014
 #define IDC_ZEBRA_WIDTH                 1015
 #define IDC_ZEBRA_STEP                  1016
+#define IDC_IMMEDIATE                   1017
 
 // Next default values for new objects
 // 

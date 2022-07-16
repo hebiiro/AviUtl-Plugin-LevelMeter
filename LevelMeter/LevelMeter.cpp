@@ -37,19 +37,13 @@ COLORREF g_zebraColor = RGB(0, 0, 0);
 int g_minRange = -33;
 int g_maxRange = 14;
 BOOL g_useTheme = FALSE;
+BOOL g_immediate = FALSE;
 
 //--------------------------------------------------------------------
 
-inline double normalizedSqr(short pcm)
+inline double normalize(short pcm)
 {
-	double normalized = pcm / 32768.0; // -1.0 ～ 1.0に正規化
-	return normalized * normalized;
-}
-
-inline double normalizedAbs(short pcm)
-{
-	double normalized = pcm / 32768.0; // -1.0 ～ 1.0に正規化
-	return fabs(normalized);
+	return pcm / 32768.0; // -1.0 ～ 1.0に正規化
 }
 
 BOOL onProc(AviUtl::FilterPlugin* fp, AviUtl::FilterProcInfo* fpip, AudioData* data)
@@ -64,11 +58,10 @@ BOOL onProc(AviUtl::FilterPlugin* fp, AviUtl::FilterProcInfo* fpip, AudioData* d
 
 		for (int i = 0; i < data->audio_n * 2; i += 2)
 		{
-			g_level[ch] += normalizedSqr(data->audiop[i + ch]);
+			double n = normalize(data->audiop[i + ch]);
 
-			double na = normalizedAbs(data->audiop[i + ch]);
-
-			if (g_peak[ch] < na) g_peak[ch] = na;
+			g_level[ch] += n * n;
+			g_peak[ch] = std::max(g_peak[ch], fabs(n));
 		}
 
 		g_level[ch] = sqrt(g_level[ch] / data->audio_n);
@@ -77,7 +70,10 @@ BOOL onProc(AviUtl::FilterPlugin* fp, AviUtl::FilterProcInfo* fpip, AudioData* d
 		g_peak[ch] = 20 * log10(g_peak[ch]);
 	}
 
-	onPaint(fp->hwnd, fpip->editp, fp);
+	if (g_immediate)
+		onPaint(fp->hwnd, fpip->editp, fp);
+	else
+		::SetTimer(fp->hwnd, TimerID::REDRAW, 1, 0);
 
 	return TRUE;
 }
@@ -308,6 +304,8 @@ void onConfigDialog(HWND hwnd)
 	::SetDlgItemInt(dialog, IDC_MAX_RANGE, g_maxRange, TRUE);
 	HWND hwndUseTheme = ::GetDlgItem(dialog, IDC_USE_THEME);
 	Button_SetCheck(hwndUseTheme, g_useTheme);
+	HWND hwndImmediate = ::GetDlgItem(dialog, IDC_IMMEDIATE);
+	Button_SetCheck(hwndImmediate, g_immediate);
 
 	int retValue = dialog.doModal();
 
@@ -329,6 +327,7 @@ void onConfigDialog(HWND hwnd)
 	g_minRange = ::GetDlgItemInt(dialog, IDC_MIN_RANGE, 0, TRUE);
 	g_maxRange = ::GetDlgItemInt(dialog, IDC_MAX_RANGE, 0, TRUE);
 	g_useTheme = Button_GetCheck(hwndUseTheme);
+	g_immediate = Button_GetCheck(hwndImmediate);
 
 	::InvalidateRect(hwnd, 0, FALSE);
 }
@@ -356,6 +355,7 @@ void loadConfig()
 	getPrivateProfileInt(fileName, L"Config", L"minRange", g_minRange);
 	getPrivateProfileInt(fileName, L"Config", L"maxRange", g_maxRange);
 	getPrivateProfileBool(fileName, L"Config", L"useTheme", g_useTheme);
+	getPrivateProfileBool(fileName, L"Config", L"immediate", g_immediate);
 }
 
 void saveConfig()
@@ -379,6 +379,7 @@ void saveConfig()
 	setPrivateProfileInt(fileName, L"Config", L"minRange", g_minRange);
 	setPrivateProfileInt(fileName, L"Config", L"maxRange", g_maxRange);
 	setPrivateProfileBool(fileName, L"Config", L"useTheme", g_useTheme);
+	setPrivateProfileBool(fileName, L"Config", L"immediate", g_immediate);
 }
 
 //--------------------------------------------------------------------
