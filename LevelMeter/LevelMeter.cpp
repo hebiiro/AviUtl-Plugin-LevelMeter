@@ -18,10 +18,11 @@ HTHEME g_theme = 0;
 double g_level[2] = {};
 double g_peak[2] = {};
 
-int g_dragMode = DragMode::minRange;
+int g_dragMode = DragMode::MIN_RANGE;
 POINT g_dragOriginPoint = {};
 int g_dragOriginRange = 0;
 
+int g_enableMode = EnableMode::ON;
 COLORREF g_fillColor = RGB(20, 60, 200);
 COLORREF g_rmsColor0 = RGB(251, 218, 17);
 COLORREF g_rmsColor1 = RGB(183, 249, 19);
@@ -265,12 +266,41 @@ void onContextMenu(HWND hwnd)
 
 	HMENU menu = ::CreatePopupMenu();
 
+	::AppendMenu(menu, MF_STRING, CommandID::ENABLE_MODE_ON, _T("有効"));
+	::AppendMenu(menu, MF_STRING, CommandID::ENABLE_MODE_ON_WITHOUT_PLAYING, _T("有効(再生時以外)"));
+	::AppendMenu(menu, MF_STRING, CommandID::ENABLE_MODE_OFF, _T("無効"));
+	::AppendMenu(menu, MF_SEPARATOR, 0, 0);
 	::AppendMenu(menu, MF_STRING, CommandID::CONFIG, _T("設定"));
+
+	switch (g_enableMode)
+	{
+	case EnableMode::OFF: ::CheckMenuItem(menu, CommandID::ENABLE_MODE_OFF, MF_CHECKED); break;
+	case EnableMode::ON: ::CheckMenuItem(menu, CommandID::ENABLE_MODE_ON, MF_CHECKED); break;
+	case EnableMode::ON_WITHOUT_PLAYING: ::CheckMenuItem(menu, CommandID::ENABLE_MODE_ON_WITHOUT_PLAYING, MF_CHECKED); break;
+	}
 
 	int id = ::TrackPopupMenu(menu, TPM_NONOTIFY | TPM_RETURNCMD, cursorPos.x, cursorPos.y, 0, hwnd, 0);
 
 	switch (id)
 	{
+	case CommandID::ENABLE_MODE_OFF:
+		{
+			g_enableMode = EnableMode::OFF;
+
+			break;
+		}
+	case CommandID::ENABLE_MODE_ON:
+		{
+			g_enableMode = EnableMode::ON;
+
+			break;
+		}
+	case CommandID::ENABLE_MODE_ON_WITHOUT_PLAYING:
+		{
+			g_enableMode = EnableMode::ON_WITHOUT_PLAYING;
+
+			break;
+		}
 	case CommandID::CONFIG:
 		{
 			onConfigDialog(hwnd);
@@ -340,6 +370,7 @@ void loadConfig()
 	::GetModuleFileNameW(g_fp->dll_hinst,  fileName, MAX_PATH);
 	::PathRenameExtensionW(fileName, L".ini");
 
+	getPrivateProfileInt(fileName, L"Config", L"enableMode", g_enableMode);
 	getPrivateProfileColor(fileName, L"Config", L"fillColor", g_fillColor);
 	getPrivateProfileColor(fileName, L"Config", L"rmsColor0", g_rmsColor0);
 	getPrivateProfileColor(fileName, L"Config", L"rmsColor1", g_rmsColor1);
@@ -364,6 +395,7 @@ void saveConfig()
 	::GetModuleFileNameW(g_fp->dll_hinst,  fileName, MAX_PATH);
 	::PathRenameExtensionW(fileName, L".ini");
 
+	setPrivateProfileInt(fileName, L"Config", L"enableMode", g_enableMode);
 	setPrivateProfileColor(fileName, L"Config", L"fillColor", g_fillColor);
 	setPrivateProfileColor(fileName, L"Config", L"rmsColor0", g_rmsColor0);
 	setPrivateProfileColor(fileName, L"Config", L"rmsColor1", g_rmsColor1);

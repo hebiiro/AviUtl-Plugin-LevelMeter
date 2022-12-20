@@ -27,8 +27,26 @@ BOOL func_proc(AviUtl::FilterPlugin* fp, AviUtl::FilterProcInfo* fpip)
 {
 	MY_TRACE(_T("func_proc()\n"));
 
+	switch (g_enableMode)
+	{
+	case EnableMode::OFF:
+		{
+			return FALSE; // 無効化されているときは何もしない。
+		}
+	case EnableMode::ON_WITHOUT_PLAYING:
+		{
+			if ((DWORD)fpip->editp->aviutl_window_info.flag & 0x00040000)
+				return FALSE; // 再生中のときは何もしない。
+
+			break;
+		}
+	}
+
 	if (fp->exfunc->is_saving(fpip->editp))
 		return FALSE; // 保存のときは何もしない。
+
+	if (!fp->exfunc->is_filter_window_disp(fp))
+		return FALSE; // ウィンドウが非表示のときは何もしない。
 
 	// ファイル情報を取得する。
 	AviUtl::FileInfo fi = {};
@@ -113,12 +131,12 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 
 			if (g_dragOriginPoint.y < cy)
 			{
-				g_dragMode = DragMode::maxRange;
+				g_dragMode = DragMode::MAX_RANGE;
 				g_dragOriginRange = g_maxRange;
 			}
 			else
 			{
-				g_dragMode = DragMode::minRange;
+				g_dragMode = DragMode::MIN_RANGE;
 				g_dragOriginRange = g_minRange;
 			}
 
@@ -135,8 +153,8 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 
 				switch (g_dragMode)
 				{
-				case DragMode::maxRange: g_maxRange = g_dragOriginRange + offset / 5; break;
-				case DragMode::minRange: g_minRange = g_dragOriginRange + offset / 5; break;
+				case DragMode::MAX_RANGE: g_maxRange = g_dragOriginRange + offset / 5; break;
+				case DragMode::MIN_RANGE: g_minRange = g_dragOriginRange + offset / 5; break;
 				}
 
 				::InvalidateRect(hwnd, 0, FALSE);
@@ -168,7 +186,7 @@ BOOL func_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, AviUtl:
 EXTERN_C AviUtl::FilterPluginDLL* CALLBACK GetFilterTable()
 {
 	LPCSTR name = "レベルメーター";
-	LPCSTR information = "レベルメーター 1.3.0 by 蛇色";
+	LPCSTR information = "レベルメーター 1.4.0 by 蛇色";
 
 	static AviUtl::FilterPluginDLL filter =
 	{
