@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{b2b8b579-a036-4aeb-aa10-399e689a71f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="NanoVG">
+      <UniqueIdentifier>{c21b9138-635f-48c2-b348-abe2ffd0b023}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="OutProcess.h" />
+    <ClInclude Include="..\..\NanoVG\fontstash.h">
+      <Filter>NanoVG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NanoVG\nanovg.h">
+      <Filter>NanoVG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NanoVG\nanovg_gl.h">
+      <Filter>NanoVG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NanoVG\nanovg_gl_utils.h">
+      <Filter>NanoVG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NanoVG\stb_image.h">
+      <Filter>NanoVG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NanoVG\stb_truetype.h">
+      <Filter>NanoVG</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Design.h" />
+    <ClInclude Include="ConfigDialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="OutProcess.cpp" />
+    <ClCompile Include="..\..\NanoVG\nanovg.c">
+      <Filter>NanoVG</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Design.cpp" />
+    <ClCompile Include="ConfigDialog.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OutProcess.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

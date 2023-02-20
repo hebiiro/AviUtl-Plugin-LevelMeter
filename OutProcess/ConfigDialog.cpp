@@ -1,11 +1,11 @@
 ﻿#include "pch.h"
 #include "ConfigDialog.h"
-#include "LevelMeter.h"
+#include "OutProcess.h"
 
 //---------------------------------------------------------------------
 
 ConfigDialog::ConfigDialog(HWND hwnd)
-	: Dialog(g_fp->dll_hinst, MAKEINTRESOURCE(IDD_CONFIG), hwnd)
+	: Dialog(g_instance, MAKEINTRESOURCE(IDD_CONFIG), hwnd)
 {
 }
 
@@ -33,8 +33,8 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			case IDC_RMS_COLOR_0:
 			case IDC_RMS_COLOR_1:
 			case IDC_PEAK_COLOR:
-			case IDC_GUAGE_COLOR:
-			case IDC_GUAGE_TEXT_COLOR:
+			case IDC_SCALE_COLOR:
+			case IDC_SCALE_TEXT_COLOR:
 			case IDC_SEPARATOR_COLOR:
 			case IDC_ZEBRA_COLOR:
 				{
@@ -71,8 +71,8 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			case IDC_RMS_COLOR_0:
 			case IDC_RMS_COLOR_1:
 			case IDC_PEAK_COLOR:
-			case IDC_GUAGE_COLOR:
-			case IDC_GUAGE_TEXT_COLOR:
+			case IDC_SCALE_COLOR:
+			case IDC_SCALE_TEXT_COLOR:
 			case IDC_SEPARATOR_COLOR:
 			case IDC_ZEBRA_COLOR:
 				{

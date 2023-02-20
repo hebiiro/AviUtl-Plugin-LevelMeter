@@ -1,2 +1,2 @@
 EXPORTS
-	GetFilterTable @1
+	GetFilterTableList @1

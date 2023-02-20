@@ -3,37 +3,31 @@
   <ItemGroup>
     <ClInclude Include="LevelMeter.h" />
     <ClInclude Include="pch.h">
-      <Filter>Base</Filter>
+      <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigDialog.h" />
-    <ClInclude Include="resource.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
+    <ClInclude Include="OutProcess.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="Sender.h" />
+    <ClInclude Include="SenderThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelMeter.cpp" />
     <ClCompile Include="LevelMeter_Filter.cpp" />
     <ClCompile Include="pch.cpp">
-      <Filter>Base</Filter>
+      <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigDialog.cpp" />
+    <ClCompile Include="OutProcess.cpp" />
+    <ClCompile Include="Sender.cpp" />
+    <ClCompile Include="SenderThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Base">
+    <Filter Include="Framework">
       <UniqueIdentifier>{6c1c067d-7a57-49d3-9a35-863cbcdd975e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{4a22bb45-acef-4e7b-8129-d4de4a8a9b39}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="LevelMeter.def">
-      <Filter>Base</Filter>
+      <Filter>Framework</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="LevelMeter.rc">
-      <Filter>Resource</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
