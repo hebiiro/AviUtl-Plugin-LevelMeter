@@ -59,6 +59,8 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Design.cpp" />
     <ClCompile Include="ConfigDialog.cpp" />
+    <ClCompile Include="MainWindow_Config.cpp" />
+    <ClCompile Include="MainWindow_Paint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OutProcess.rc">

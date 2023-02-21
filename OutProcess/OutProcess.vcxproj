@@ -196,6 +196,8 @@
     <ClCompile Include="ConfigDialog.cpp" />
     <ClCompile Include="Design.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MainWindow_Config.cpp" />
+    <ClCompile Include="MainWindow_Paint.cpp" />
     <ClCompile Include="OutProcess.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

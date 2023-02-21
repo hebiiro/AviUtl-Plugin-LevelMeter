@@ -29,6 +29,27 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 			switch (id)
 			{
+			case IDC_IMAGE_FILE_NAME_BROWSE:
+				{
+					TCHAR fileName[MAX_PATH];
+					::GetDlgItemText(hwnd, IDC_IMAGE_FILE_NAME, fileName, MAX_PATH);
+
+					OPENFILENAME ofn = { sizeof(ofn) };
+					ofn.Flags = OFN_FILEMUSTEXIST;
+					ofn.hwndOwner = hwnd;
+					ofn.lpstrFilter =
+						_T("PNG Files {*.png}\0*.png\0")
+						_T("All Files {*.*}\0*.*\0");
+					ofn.lpstrFile = fileName;
+					ofn.nMaxFile = MAX_PATH;
+
+					if (::GetOpenFileName(&ofn))
+					{
+						::SetDlgItemText(hwnd, IDC_IMAGE_FILE_NAME, fileName);
+					}
+
+					break;
+				}
 			case IDC_FILL_COLOR:
 			case IDC_RMS_COLOR_0:
 			case IDC_RMS_COLOR_1:
@@ -37,10 +58,12 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			case IDC_SCALE_TEXT_COLOR:
 			case IDC_SEPARATOR_COLOR:
 			case IDC_ZEBRA_COLOR:
+			case IDC_SHADOW_COLOR:
 				{
 					HWND control = (HWND)lParam;
 
-					COLORREF color = ::GetDlgItemInt(hwnd, id, 0, FALSE);
+					DWORD rgba = ::GetDlgItemInt(hwnd, id, 0, FALSE);
+					COLORREF color = MyColor::getCOLORREF(rgba);
 
 					static COLORREF customColors[16] = {};
 					CHOOSECOLOR cc { sizeof(cc) };
@@ -50,7 +73,7 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 					cc.Flags = CC_RGBINIT | CC_FULLOPEN;
 					if (!::ChooseColor(&cc)) return TRUE;
 
-					color = cc.rgbResult;
+					color = MyColor::getDWORD(cc.rgbResult, rgba);
 
 					::SetDlgItemInt(hwnd, id, color, FALSE);
 					::InvalidateRect(control, 0, FALSE);
@@ -75,11 +98,12 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			case IDC_SCALE_TEXT_COLOR:
 			case IDC_SEPARATOR_COLOR:
 			case IDC_ZEBRA_COLOR:
+			case IDC_SHADOW_COLOR:
 				{
 					DRAWITEMSTRUCT* dis = (DRAWITEMSTRUCT*)lParam;
 
-					COLORREF color = ::GetDlgItemInt(hwnd, id, 0, FALSE);
-
+					DWORD rgba = ::GetDlgItemInt(hwnd, id, 0, FALSE);
+					COLORREF color = MyColor::getCOLORREF(rgba);
 					HBRUSH brush = ::CreateSolidBrush(color);
 					FillRect(dis->hDC, &dis->rcItem, brush);
 					::DeleteObject(brush);

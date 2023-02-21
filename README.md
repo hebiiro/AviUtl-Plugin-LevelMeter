@@ -36,6 +36,7 @@
 
 ## 更新履歴
 
+* 2.1.0 - 2023/02/21 背景画像などの描画オプションを追加
 * 2.0.0 - 2023/02/20 マルチスレッド/マルチプロセスにして高速化
 * 1.4.0 - 2022/12/20 有効/無効を切り替えられるように修正
 * 1.3.0 - 2022/07/16 ほんの少し最適化
@@ -50,6 +51,8 @@
 
 ## クレジット
 
+* NanoVG https://github.com/memononen/nanovg
+* The OpenGL Extension Wrangler Library (GLEW) https://glew.sourceforge.net/
 * Microsoft Research Detours Package https://github.com/microsoft/Detours
 * aviutl_exedit_sdk https://github.com/ePi5131/aviutl_exedit_sdk
 * Common Library https://github.com/hebiiro/Common-Library

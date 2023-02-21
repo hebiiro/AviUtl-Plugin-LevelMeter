@@ -5,17 +5,6 @@
 
 //--------------------------------------------------------------------
 
-struct MyColor : public NVGcolor
-{
-	MyColor(COLORREF color)
-	{
-		this->r = GetRValue(color) / 255.0f;
-		this->g = GetGValue(color) / 255.0f;
-		this->b = GetBValue(color) / 255.0f;
-		this->a = 1.0f;
-	}
-};
-
 struct MakeCurrent
 {
 	HDC m_prevDC = 0;
@@ -50,7 +39,7 @@ struct MainWindow
 	NVGcontext* m_vg = 0;
 	int m_fontDefault = 0;
 	int m_fontDefault2 = 0;
-	int m_backgroundImage = 0;
+	int m_image = 0;
 
 	double m_level[2] = {};
 	double m_peak[2] = {};
@@ -68,6 +57,7 @@ struct MainWindow
 	void load();
 	void save();
 	BOOL config(HWND hwnd);
+	void updateDesign();
 	static BOOL setupPixelFormat(HDC dc);
 	BOOL initOpenGL();
 	BOOL termOpenGL();
