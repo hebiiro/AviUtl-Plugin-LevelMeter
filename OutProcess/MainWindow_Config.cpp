@@ -183,14 +183,19 @@ void MainWindow::updateDesign()
 {
 	MY_TRACE(_T("MainWindow::updateDesign()\n"));
 
-	m_fontDefault = nvgCreateFont(m_vg, u8"default", StringU8(g_design.fontDefault));
-	m_fontDefault2 = nvgCreateFont(m_vg, u8"default2", StringU8(g_design.fontDefault2));
+	m_fontDefault = nvgCreateFont(m_vg, "default", (LPCSTR)(g_design.fontDefault));
+	m_fontDefault2 = nvgCreateFont(m_vg, "default2", (LPCSTR)(g_design.fontDefault2));
 	nvgAddFallbackFontId(m_vg, m_fontDefault, m_fontDefault2);
 
 	if (m_image)
 		nvgDeleteImage(m_vg, m_image);
 
-	m_image = nvgCreateImage(m_vg, StringU8(g_design.imageFileName), 0);
+	MY_TRACE_WSTR((BSTR)g_design.imageFileName);
+	MY_TRACE_STR((LPCSTR)(g_design.imageFileName));
+	MY_TRACE_STR((LPCSTR)StringU8(g_design.imageFileName));
+
+	m_image = nvgCreateImage(m_vg, (LPCSTR)(g_design.imageFileName), 0);
+//	m_image = nvgCreateImage(m_vg, StringU8(g_design.imageFileName), 0);
 }
 
 //--------------------------------------------------------------------
