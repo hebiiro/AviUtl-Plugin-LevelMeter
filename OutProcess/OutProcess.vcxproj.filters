@@ -11,6 +11,9 @@
     <Filter Include="NanoVG">
       <UniqueIdentifier>{c21b9138-635f-48c2-b348-abe2ffd0b023}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{0e170b6e-8889-4a23-bd4d-c4452d304bf4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -25,7 +28,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="OutProcess.h" />
     <ClInclude Include="..\..\NanoVG\fontstash.h">
       <Filter>NanoVG</Filter>
     </ClInclude>
@@ -44,9 +46,36 @@
     <ClInclude Include="..\..\NanoVG\stb_truetype.h">
       <Filter>NanoVG</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Design.h" />
     <ClInclude Include="ConfigDialog.h" />
+    <ClInclude Include="PaintWindow.h" />
+    <ClInclude Include="Hive.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="View.h" />
+    <ClInclude Include="..\..\Common\DesignBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Dialog.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Profile.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Tracer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Window.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\WinUtility.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Gdi.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\FileUpdateChecker.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -56,11 +85,15 @@
     <ClCompile Include="..\..\NanoVG\nanovg.c">
       <Filter>NanoVG</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Design.cpp" />
     <ClCompile Include="ConfigDialog.cpp" />
-    <ClCompile Include="MainWindow_Config.cpp" />
-    <ClCompile Include="MainWindow_Paint.cpp" />
+    <ClCompile Include="PaintWindow.cpp" />
+    <ClCompile Include="PaintWindow_Paint.cpp" />
+    <ClCompile Include="Hive.cpp" />
+    <ClCompile Include="PaintWindow_Mouse.cpp" />
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="View.cpp" />
+    <ClCompile Include="PaintWindow_OpenGL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OutProcess.rc">

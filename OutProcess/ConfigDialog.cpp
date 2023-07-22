@@ -1,12 +1,10 @@
 ﻿#include "pch.h"
 #include "ConfigDialog.h"
-#include "OutProcess.h"
+#include "Design.h"
 
-//---------------------------------------------------------------------
-
-ConfigDialog::ConfigDialog(HWND hwnd)
-	: Dialog(g_instance, MAKEINTRESOURCE(IDD_CONFIG), hwnd)
+ConfigDialog::ConfigDialog(HINSTANCE instance, HWND parent)
 {
+	create(instance, MAKEINTRESOURCE(IDD_CONFIG), parent);
 }
 
 void ConfigDialog::onOK()
@@ -23,63 +21,75 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 {
 	switch (message)
 	{
+	case WM_INITDIALOG:
+		{
+			MY_TRACE(_T("ConfigDialog::onDlgProc(WM_INITDIALOG)\n"));
+
+			initColorButton(*this, IDC_BACKGROUND_FILL_START);
+			initColorButton(*this, IDC_BACKGROUND_FILL_END);
+
+			initColorButton(*this, IDC_VOLUME_LEVEL_FILL_START);
+			initColorButton(*this, IDC_VOLUME_LEVEL_FILL_END);
+
+			initColorButton(*this, IDC_VOLUME_PEAK_STROKE_COLOR);
+			initLineStyleComboBox(*this, IDC_VOLUME_PEAK_STROKE_STYLE);
+
+			initColorButton(*this, IDC_VOLUME_ZEBRA_STROKE_COLOR);
+			initLineStyleComboBox(*this, IDC_VOLUME_ZEBRA_STROKE_STYLE);
+
+			initColorButton(*this, IDC_SCALE_STROKE_COLOR);
+			initLineStyleComboBox(*this, IDC_SCALE_STROKE_STYLE);
+
+			initColorButton(*this, IDC_SCALE_TEXT_COLOR);
+			initColorButton(*this, IDC_SCALE_TEXT_SHADOW_COLOR);
+
+			break;
+		}
 	case WM_COMMAND:
 		{
 			UINT id = LOWORD(wParam);
+			HWND control = (HWND)lParam;
 
 			switch (id)
 			{
-			case IDC_IMAGE_FILE_NAME_BROWSE:
+			case IDC_FONT_DEFAULT_BROWSE:
+			case IDC_FONT_DEFAULT_2_BROWSE:
 				{
-					TCHAR fileName[MAX_PATH];
-					::GetDlgItemText(hwnd, IDC_IMAGE_FILE_NAME, fileName, MAX_PATH);
-
-					OPENFILENAME ofn = { sizeof(ofn) };
-					ofn.Flags = OFN_FILEMUSTEXIST;
-					ofn.hwndOwner = hwnd;
-					ofn.lpstrFilter =
-						_T("PNG Files {*.png}\0*.png\0")
-						_T("All Files {*.*}\0*.*\0");
-					ofn.lpstrFile = fileName;
-					ofn.nMaxFile = MAX_PATH;
-
-					if (::GetOpenFileName(&ofn))
-					{
-						::SetDlgItemText(hwnd, IDC_IMAGE_FILE_NAME, fileName);
-					}
-
-					break;
-				}
-			case IDC_FILL_COLOR:
-			case IDC_RMS_COLOR_0:
-			case IDC_RMS_COLOR_1:
-			case IDC_PEAK_COLOR:
-			case IDC_SCALE_COLOR:
-			case IDC_SCALE_TEXT_COLOR:
-			case IDC_SEPARATOR_COLOR:
-			case IDC_ZEBRA_COLOR:
-			case IDC_SHADOW_COLOR:
-				{
-					HWND control = (HWND)lParam;
-
-					DWORD rgba = ::GetDlgItemInt(hwnd, id, 0, FALSE);
-					COLORREF color = MyColor::getCOLORREF(rgba);
-
-					static COLORREF customColors[16] = {};
-					CHOOSECOLOR cc { sizeof(cc) };
-					cc.hwndOwner = hwnd;
-					cc.lpCustColors = customColors;
-					cc.rgbResult = color;
-					cc.Flags = CC_RGBINIT | CC_FULLOPEN;
-					if (!::ChooseColor(&cc)) return TRUE;
-
-					color = MyColor::getDWORD(cc.rgbResult, rgba);
-
-					::SetDlgItemInt(hwnd, id, color, FALSE);
-					::InvalidateRect(control, 0, FALSE);
+					browse(hwnd, id - 1,
+						_T("Font Files {*.ttf;*.ttc;*.otf}\0*.ttf;*.ttc;*.otf\0")
+						_T("All Files {*.*}\0*.*\0"));
 
 					return TRUE;
 				}
+			case IDC_IMAGE_FILE_NAME_BROWSE:
+				{
+					browse(hwnd, IDC_IMAGE_FILE_NAME,
+						_T("PNG Files {*.png}\0*.png\0")
+						_T("All Files {*.*}\0*.*\0"));
+
+					return TRUE;
+				}
+			}
+
+			if (isColorButton(control))
+			{
+				DWORD rgba = ::GetDlgItemInt(hwnd, id, 0, FALSE);
+				COLORREF color = Tools::MyColor::getCOLORREF(rgba);
+
+				static COLORREF customColors[16] = {};
+				CHOOSECOLOR cc { sizeof(cc) };
+				cc.hwndOwner = hwnd;
+				cc.lpCustColors = customColors;
+				cc.rgbResult = color;
+				cc.Flags = CC_RGBINIT | CC_FULLOPEN;
+				if (!::ChooseColor(&cc)) return TRUE;
+
+				color = Tools::MyColor::getDWORD(cc.rgbResult, rgba);
+				::SetDlgItemInt(hwnd, id, color, FALSE);
+
+				::InvalidateRect(control, 0, FALSE);
+
+				return TRUE;
 			}
 
 			break;
@@ -87,29 +97,17 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_DRAWITEM:
 		{
 			UINT id = wParam;
+			DRAWITEMSTRUCT* dis = (DRAWITEMSTRUCT*)lParam;
 
-			switch (id)
+			if (isColorButton(dis->hwndItem))
 			{
-			case IDC_FILL_COLOR:
-			case IDC_RMS_COLOR_0:
-			case IDC_RMS_COLOR_1:
-			case IDC_PEAK_COLOR:
-			case IDC_SCALE_COLOR:
-			case IDC_SCALE_TEXT_COLOR:
-			case IDC_SEPARATOR_COLOR:
-			case IDC_ZEBRA_COLOR:
-			case IDC_SHADOW_COLOR:
-				{
-					DRAWITEMSTRUCT* dis = (DRAWITEMSTRUCT*)lParam;
+				DWORD rgba = ::GetDlgItemInt(hwnd, id, 0, FALSE);
+				COLORREF color = Tools::MyColor::getCOLORREF(rgba);
+				HBRUSH brush = ::CreateSolidBrush(color);
+				::FillRect(dis->hDC, &dis->rcItem, brush);
+				::DeleteObject(brush);
 
-					DWORD rgba = ::GetDlgItemInt(hwnd, id, 0, FALSE);
-					COLORREF color = MyColor::getCOLORREF(rgba);
-					HBRUSH brush = ::CreateSolidBrush(color);
-					FillRect(dis->hDC, &dis->rcItem, brush);
-					::DeleteObject(brush);
-
-					return TRUE;
-				}
+				return TRUE;
 			}
 
 			break;
@@ -118,5 +116,3 @@ INT_PTR ConfigDialog::onDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 	return Dialog::onDlgProc(hwnd, message, wParam, lParam);
 }
-
-//---------------------------------------------------------------------

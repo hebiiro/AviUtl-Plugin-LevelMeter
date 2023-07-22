@@ -8,6 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
+#include <windowsx.h>
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
 #include <commdlg.h>
@@ -28,11 +29,15 @@
 #include <algorithm>
 #include <memory>
 #include <vector>
+#include <list>
 
 #include "NanoVG/nanovg.h"
 #include "Common/Tracer.h"
-#include "Common/Profile.h"
-#include "Common/Dialog.h"
-#include "Common/Gdi.h"
 #include "Common/WinUtility.h"
-#include "LevelMeter/LevelMeter/Common.h"
+#include "Common/Profile.h"
+#include "Common/FileUpdateChecker.h"
+#include "Common/Gdi.h"
+#include "Common/Window.h"
+#include "Common/Dialog.h"
+#include "Common/DesignBase.h"
+#include "LevelMeter/LevelMeter/Share.h"
